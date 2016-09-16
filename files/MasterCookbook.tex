@@ -1,0 +1,135 @@
+\documentclass[12pt,letterpaper,openany]{book}
+
+\usepackage[columns=3,rule=0.1pt,initsep=15pt]{idxlayout}  %three column index with ruled line down the middle
+\usepackage{multicol}
+		\raggedcolumns %used later to make two columns for ingredients
+\usepackage{blindtext} %used for practice recipes
+\usepackage[margin=.75in]{geometry}
+\usepackage{changepage}
+\usepackage{units}
+\usepackage{hanging}
+\usepackage{xifthen}% provides \isempty test for bottominfo command in recipe environment
+\usepackage[pdftex]{graphicx} %necessary for the title page
+\usepackage{titlesec}
+\usepackage{makeidx}   %Enables the making of an index
+	\makeindex
+\usepackage{fancyhdr} %used to change headers and footers
+\usepackage[hidelinks]{hyperref} %Enable urls
+%\usepackage{showframe}
+
+%-----------------------------------------------------------------------------------------------
+%Chapter and section heading spacing, headers and footers
+\titlespacing*{\chapter}{0pt}{-30pt}{5pt}   %moves the chapter headings closer to the top of the page
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries\centering}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}[display]{\normalfont\Large\bfseries}{\sectiontitlename\ \thecapter}{20pt}{\LARGE}
+
+\setcounter{tocdepth}{2} 
+
+\titleformat{\subsection}[display]  %Centers the recipe titles
+  {\normalfont\large\bfseries\centering}{\subsectiontitlename\ \thechapter}{20pt}{\Large}
+
+% The following uses fancyhdr
+\setlength{\headheight}{15pt} %Avoids error message
+\setlength{\footskip}{12pt}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}     %This makes the chapter heading as typed, not all uppercase.
+\fancyhf{} %clears headers and footers
+\fancyfoot[CO,CE]{\thepage} %inserts page numbers, bottom of page, centered
+\fancyhead[RO,LE]{\textit{\nouppercase{\leftmark}}} %inserts chapter name on left and right pages
+%-----------------------------------------------------------------------------------------------
+%These define commands for the fractions common in recipes
+\newcommand{\half}[0]{\mbox{\raisebox{0.25em}{\footnotesize {1}} \hspace{-0.85em} \raisebox{0.05em}{/} \hspace{-0.8em} \raisebox{-0.1em}{\footnotesize{2}}\hspace{0.2em}}}
+\newcommand{\tquart}[0]{\mbox{\raisebox{0.25em}{\footnotesize {3}} \hspace{-0.85em} \raisebox{0.05em}{/} \hspace{-0.85em} \raisebox{-0.1em}{\footnotesize{4}}\hspace{0.2em}}}
+\newcommand{\eighth}[0]{\mbox{\raisebox{0.25em}{\footnotesize {1}} \hspace{-0.8em} \raisebox{0.05em}{/} \hspace{-0.75em} \raisebox{-0.1em}{\footnotesize{8}}\hspace{0.2em}}}
+\newcommand{\teighth}[0]{\mbox{\raisebox{0.25em}{\footnotesize {3}} \hspace{-0.8em} \raisebox{0.05em}{/} \hspace{-0.75em} \raisebox{-0.1em}{\footnotesize{8}}\hspace{0.2em}}}
+\newcommand{\third}[0]{\mbox{\raisebox{0.25em}{\footnotesize {1}} \hspace{-0.85em} \raisebox{0.05em}{/} \hspace{-0.8em} \raisebox{-0.1em}{\footnotesize{3}}\hspace{0.2em}}}
+\newcommand{\tthird}[0]{\mbox{\raisebox{0.25em}{\footnotesize {2}} \hspace{-0.85em} \raisebox{0.05em}{/} \hspace{-0.8em} \raisebox{-0.1em}{\footnotesize{3}}\hspace{0.2em}}}
+\newcommand{\quart}[0]{\mbox{\raisebox{0.25em}{\footnotesize {1}} \hspace{-0.85em} \raisebox{0.05em}{/} \hspace{-0.85em} \raisebox{-0.1em}{\footnotesize{4}}\hspace{0.2em}}}
+\newcommand{\sixth}[0]{\mbox{\raisebox{0.25em}{\footnotesize {1}} \hspace{-0.85em} \raisebox{0.05em}{/} \hspace{-0.75em} \raisebox{-0.1em}{\footnotesize{6}}\hspace{0.2em}}}
+
+\newcommand{\degree}[0]{$^{\circ}$}
+\newcommand{\degrees}[0]{$^{\circ}$~}
+%-----------------------------------------------------------------------------------------------
+% Defines the recipe environment with top and bottom info and the ingredient environment with two columns
+\newcommand{\recipeend}[2]{}  %necessary to provide information to end of recipe environment
+
+\newcommand{\topinfo}[2]{\line(1,0){245} \\
+\noindent \null #2   \hfill #1 \vspace{-1em} \\ 
+\line(1,0){245}\\}
+
+\newcommand{\note}[1]{\ifthenelse{\isempty{#1}}{}{{\emph{#1}\\}}}
+
+\newcommand{\bottominfo}[2][]{
+	\ifthenelse{\isempty{#2}}
+	{\vspace{-.7em}}
+	{\\ \vspace{2em} \hspace{-.85em} %\bf #2 
+	\hfill \bf #1 \vspace{-2em}}
+}
+
+\newenvironment{recipe}[5]{\renewcommand{\recipeend}[2]{\bottominfo{#3}{#4}} \filbreak
+\label{#1} \rtitle{#1} \note{#5} \topinfo{#2}{#3} \vspace{-.5em}}{\vspace{.3em} \recipeend}
+
+\newenvironment{ing}[1]
+	{ \vspace{-.75em}\bf\ignorespaces \begin{hangparas}{.75em}{1}\begin{multicols}{#1} \raggedright \noindent}{  \end{multicols} \end{hangparas}\vspace{-.25em}}
+
+%-------------------------------------------------------------------------------------------------
+% Defines picture environments
+\newcommand{\smallfoodpic}[2]{
+		\ifthenelse{\isempty{#2}}{
+		\begin{center}
+		{\includegraphics[width=.75\columnwidth]{./#1}}
+		\end{center}}{
+		\begin{center}
+		{\includegraphics[width=#2\columnwidth]{./#1}}
+		\end{center}}}
+\newcommand{\largefoodpic}[2]{
+		\ifthenelse{\isempty{#2}}{\end{multicols}
+		\begin{center}
+		{\includegraphics[width=.75\textwidth]{./#1}}
+		\end{center}\begin{multicols}{2}}
+		{\end{multicols}
+		\begin{center}
+		{\includegraphics[width=#2\textwidth]{./#1}}
+		\end{center}\begin{multicols}{2}}}
+
+%--------------------------------------------------------------------------------------------------------------------
+% Defines list items
+\newcommand{\listi}[1]{#1 (p. \pageref{#1})\\}
+%--------------------------------------------------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------------------------------------------------
+%These commands include all of the necessary commands to declare a new section and add it to the TOC
+\newcommand{\rtitle}[1]{\subsection*{#1} \addcontentsline{toc}{subsection}{#1}}
+\newcommand{\addsec}[1]{\end{multicols} \section*{#1} \addcontentsline{toc}{section}{#1}\begin{multicols}{2}}
+\newcommand{\addsubsec}[1]{\end{multicols} \subsection*{#1} \addcontentsline{toc}{subsection}{#1}\begin{multicols}{2}}
+\newcommand{\addchap}[1]{\end{multicols}\chapter*{#1} \addcontentsline{toc}{chapter}{#1} \chaptermark{#1} \begin{multicols}{2}}  %the multicols command is used to remove the multicols environment from around the chapter headings.
+%--------------------------------------------------------------------------------------------------------------------
+
+\begin{document}
+\input{Title}
+%\changepage{}{}{}{}{}{20pt}{}{}{}
+\cleardoublepage%This begins the table of contents on a right-hand page.
+\tableofcontents
+\cleardoublepage %This starts the first section on a right-hand page.
+
+\index{Icing|see{Frosting}}
+\index{Macadamia Nuts|see{Nuts, Macadamia}}
+\index{Buns, Sticky|see{Rolls, Pecan}}
+\index{Dressing|see{Stuffing}}
+\index{Crumble|see{Cobbler}}
+
+\begin{multicols}{2}
+\input{recipes}
+\end{multicols}
+
+\begin{multicols}{2}
+\addchap{Conversions and Substitutions}
+\input{conversions}\end{multicols}	
+%	
+%The following makes the index and gives it the proper headings
+\cleardoublepage  %begins the index on the right hand page.
+\chaptermark{Index}
+\addcontentsline{toc}{chapter}{Index}
+\printindex
+
+\end{document}
